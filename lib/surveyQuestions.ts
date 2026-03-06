@@ -1,0 +1,157 @@
+export const SURVEY_QUESTIONS = {
+  part1: [
+    {
+      id: 'hasLentMoney',
+      question: 'Have you ever lent money to a friend or colleague?',
+      required: true,
+      type: 'radio' as const,
+      options: [
+        { value: 'yes', label: 'Yes' },
+        { value: 'no', label: 'No' },
+      ],
+    },
+    {
+      id: 'facedRepaymentDelays',
+      question: 'Did you face repayment delays?',
+      required: true,
+      type: 'radio' as const,
+      options: [
+        { value: 'yes', label: 'Yes' },
+        { value: 'no', label: 'No' },
+      ],
+      showIf: { hasLentMoney: 'yes' },
+    },
+    {
+      id: 'lostMoney',
+      question: 'Did you lose money (never got it back)?',
+      required: true,
+      type: 'radio' as const,
+      options: [
+        { value: 'yes', label: 'Yes' },
+        { value: 'no', label: 'No' },
+      ],
+      showIf: { hasLentMoney: 'yes' },
+    },
+    {
+      id: 'averageLoanSize',
+      question: 'What was typically your average loan size?',
+      required: true,
+      type: 'radio' as const,
+      options: [
+        { value: 'under-5k', label: 'Under ₹5,000' },
+        { value: '5k-25k', label: '₹5,000 - ₹25,000' },
+        { value: '25k-50k', label: '₹25,000 - ₹50,000' },
+        { value: '50k-1lakh', label: '₹50,000 - ₹1,00,000' },
+        { value: 'above-1lakh', label: 'Above ₹1,00,000' },
+      ],
+      showIf: { hasLentMoney: 'yes' },
+    },
+    {
+      id: 'hesitatedToAsk',
+      question: 'Did you hesitate to ask for repayment?',
+      required: true,
+      type: 'radio' as const,
+      options: [
+        { value: 'yes', label: 'Yes' },
+        { value: 'no', label: 'No' },
+      ],
+      showIf: { hasLentMoney: 'yes' },
+    },
+    {
+      id: 'wantStructuredPlatform',
+      question: 'Would you want a structured lending platform to manage informal loans?',
+      required: true,
+      type: 'radio' as const,
+      options: [
+        { value: 'yes', label: 'Yes' },
+        { value: 'no', label: 'No' },
+      ],
+    },
+  ],
+  part2: [
+    {
+      id: 'experiencedDelayedPayments',
+      question: 'Have you ever experienced delayed payments (salary, freelance, rent, etc.)?',
+      required: true,
+      type: 'radio' as const,
+      options: [
+        { value: 'yes', label: 'Yes' },
+        { value: 'no', label: 'No' },
+      ],
+    },
+    {
+      id: 'delayedPaymentType',
+      question: 'What was the most common type of delayed payment?',
+      required: true,
+      type: 'radio' as const,
+      options: [
+        { value: 'salary', label: 'Salary' },
+        { value: 'freelance', label: 'Freelance / Client payment' },
+        { value: 'rent', label: 'Rent / Refund' },
+        { value: 'vendor', label: 'Vendor / Supplier' },
+        { value: 'other', label: 'Other' },
+      ],
+      showIf: { experiencedDelayedPayments: 'yes' },
+    },
+    {
+      id: 'averageDelayDuration',
+      question: 'What was the average delay duration?',
+      required: true,
+      type: 'radio' as const,
+      options: [
+        { value: 'under-1week', label: 'Under 1 week' },
+        { value: '1-2weeks', label: '1-2 weeks' },
+        { value: '2-4weeks', label: '2-4 weeks' },
+        { value: '1-2months', label: '1-2 months' },
+        { value: 'above-2months', label: 'Above 2 months' },
+      ],
+      showIf: { experiencedDelayedPayments: 'yes' },
+    },
+    {
+      id: 'sentMoreThan5Reminders',
+      question: 'Did you have to send more than 5 reminders to get paid?',
+      required: true,
+      type: 'radio' as const,
+      options: [
+        { value: 'yes', label: 'Yes' },
+        { value: 'no', label: 'No' },
+      ],
+      showIf: { experiencedDelayedPayments: 'yes' },
+    },
+    {
+      id: 'averageDelayedAmount',
+      question: 'What was the average delayed payment amount?',
+      required: true,
+      type: 'radio' as const,
+      options: [
+        { value: 'under-10k', label: 'Under ₹10,000' },
+        { value: '10k-50k', label: '₹10,000 - ₹50,000' },
+        { value: '50k-1lakh', label: '₹50,000 - ₹1,00,000' },
+        { value: '1lakh-5lakh', label: '₹1,00,000 - ₹5,00,000' },
+        { value: 'above-5lakh', label: 'Above ₹5,00,000' },
+      ],
+      showIf: { experiencedDelayedPayments: 'yes' },
+    },
+    {
+      id: 'experiencedMentalStress',
+      question: 'Did delayed payments cause you mental stress?',
+      required: true,
+      type: 'radio' as const,
+      options: [
+        { value: 'yes', label: 'Yes' },
+        { value: 'no', label: 'No' },
+      ],
+      showIf: { experiencedDelayedPayments: 'yes' },
+    },
+  ],
+  interest: {
+    id: 'earlyAccessInterest',
+    question: 'Would you like early access to a structured lending & payment platform?',
+    required: true,
+    type: 'radio' as const,
+    options: [
+      { value: 'yes', label: 'Yes' },
+      { value: 'no', label: 'No' },
+    ],
+  },
+};
