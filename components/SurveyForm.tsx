@@ -2,11 +2,17 @@
 
 import { useState } from 'react';
 import QuestionCard from './QuestionCard';
-import { SURVEY_QUESTIONS } from '@/lib/surveyQuestions';
-import type { AnswersPart1, AnswersPart2 } from '@/lib/types';
+import type {
+  IdeaQuestions,
+  AnswersPart1,
+  AnswersPart2,
+  SurveyQuestion,
+} from '@/lib/types';
 
 interface SurveyFormProps {
+  ideaSlug: string;
   companySlug: string;
+  questions: IdeaQuestions;
   onSuccess: () => void;
 }
 
@@ -22,7 +28,12 @@ function shouldShow(
   );
 }
 
-export default function SurveyForm({ companySlug, onSuccess }: SurveyFormProps) {
+export default function SurveyForm({
+  ideaSlug,
+  companySlug,
+  questions,
+  onSuccess,
+}: SurveyFormProps) {
   const [part, setPart] = useState<1 | 2>(1);
   const [form, setForm] = useState<FormState>({});
   const [loading, setLoading] = useState(false);
@@ -32,18 +43,22 @@ export default function SurveyForm({ companySlug, onSuccess }: SurveyFormProps) 
     setForm((prev) => ({ ...prev, [id]: value }));
   };
 
-  const part1Questions = SURVEY_QUESTIONS.part1.filter((q) =>
+  const part1Questions = questions.part1.filter((q) =>
     shouldShow(q, form)
   );
-  const part2Questions = SURVEY_QUESTIONS.part2.filter((q) =>
+  const part2Questions = questions.part2.filter((q) =>
     shouldShow(q, form)
   );
+  const interestQuestion = questions.interest as SurveyQuestion;
 
   const part1Required = part1Questions.filter((q) => q.required);
   const part2Required = part2Questions.filter((q) => q.required);
 
   const part1Valid = part1Required.every((q) => form[q.id]);
-  const part2Valid = part2Required.every((q) => form[q.id]);
+  const part2Valid =
+    part2Required.every((q) => form[q.id]) && form[interestQuestion.id];
+
+  const isLendAndBorrow = ideaSlug === 'lendandborrow';
 
   const handleSubmit = async () => {
     setError('');
@@ -61,38 +76,65 @@ export default function SurveyForm({ companySlug, onSuccess }: SurveyFormProps) 
       return;
     }
 
-    const answersPart1: AnswersPart1 = {
-      hasLentMoney: (form.hasLentMoney as 'yes' | 'no') || 'no',
-      facedRepaymentDelays: form.facedRepaymentDelays as 'yes' | 'no' | undefined,
-      lostMoney: form.lostMoney as 'yes' | 'no' | undefined,
-      averageLoanSize: form.averageLoanSize as AnswersPart1['averageLoanSize'],
-      hesitatedToAsk: form.hesitatedToAsk as 'yes' | 'no' | undefined,
-      wantStructuredPlatform: form.wantStructuredPlatform as 'yes' | 'no' | undefined,
-    };
-
-    const answersPart2: AnswersPart2 = {
-      experiencedDelayedPayments:
-        (form.experiencedDelayedPayments as 'yes' | 'no') || 'no',
-      delayedPaymentType: form.delayedPaymentType as AnswersPart2['delayedPaymentType'],
-      averageDelayDuration: form.averageDelayDuration as AnswersPart2['averageDelayDuration'],
-      sentMoreThan5Reminders: form.sentMoreThan5Reminders as 'yes' | 'no' | undefined,
-      averageDelayedAmount: form.averageDelayedAmount as AnswersPart2['averageDelayedAmount'],
-      experiencedMentalStress: form.experiencedMentalStress as 'yes' | 'no' | undefined,
-    };
-
-    const earlyAccessInterest = (form.earlyAccessInterest as 'yes' | 'no') || 'no';
-
     setLoading(true);
     try {
+      let body: Record<string, unknown>;
+
+      if (isLendAndBorrow) {
+        body = {
+          ideaSlug,
+          companySlug,
+          answersPart1: {
+            hasLentMoney: (form.hasLentMoney as 'yes' | 'no') || 'no',
+            facedRepaymentDelays: form.facedRepaymentDelays as
+              | 'yes'
+              | 'no'
+              | undefined,
+            lostMoney: form.lostMoney as 'yes' | 'no' | undefined,
+            averageLoanSize: form.averageLoanSize as
+              | AnswersPart1['averageLoanSize']
+              | undefined,
+            hesitatedToAsk: form.hesitatedToAsk as 'yes' | 'no' | undefined,
+            wantStructuredPlatform: form.wantStructuredPlatform as
+              | 'yes'
+              | 'no'
+              | undefined,
+          },
+          answersPart2: {
+            experiencedDelayedPayments:
+              (form.experiencedDelayedPayments as 'yes' | 'no') || 'no',
+            delayedPaymentType: form.delayedPaymentType as
+              | AnswersPart2['delayedPaymentType']
+              | undefined,
+            averageDelayDuration: form.averageDelayDuration as
+              | AnswersPart2['averageDelayDuration']
+              | undefined,
+            sentMoreThan5Reminders: form.sentMoreThan5Reminders as
+              | 'yes'
+              | 'no'
+              | undefined,
+            averageDelayedAmount: form.averageDelayedAmount as
+              | AnswersPart2['averageDelayedAmount']
+              | undefined,
+            experiencedMentalStress: form.experiencedMentalStress as
+              | 'yes'
+              | 'no'
+              | undefined,
+          },
+          earlyAccessInterest: (form.earlyAccessInterest as 'yes' | 'no') || 'no',
+        };
+      } else {
+        body = {
+          ideaSlug,
+          companySlug,
+          answers: form,
+        };
+      }
+
       const res = await fetch('/api/responses', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          companySlug,
-          answersPart1,
-          answersPart2,
-          earlyAccessInterest,
-        }),
+        body: JSON.stringify({ ...body, ideaSlug }),
       });
 
       if (!res.ok) {
@@ -118,13 +160,13 @@ export default function SurveyForm({ companySlug, onSuccess }: SurveyFormProps) 
         />
       </div>
       <p className="text-xs sm:text-sm text-gray-500">
-        {part === 1 ? 'PART 1 — Lending' : 'PART 2 — Delayed Payments'}
+        {part === 1 ? 'PART 1' : 'PART 2'}
       </p>
 
       {part === 1 && (
         <div className="space-y-4">
           <h2 className="text-lg sm:text-xl font-semibold text-gray-800">
-            Part 1 — Lending Experiences
+            Part 1
           </h2>
           {part1Questions.map((q) => (
             <QuestionCard
@@ -144,7 +186,7 @@ export default function SurveyForm({ companySlug, onSuccess }: SurveyFormProps) 
       {part === 2 && (
         <div className="space-y-4">
           <h2 className="text-lg sm:text-xl font-semibold text-gray-800">
-            Part 2 — Delayed Payment Experiences
+            Part 2
           </h2>
           {part2Questions.map((q) => (
             <QuestionCard
@@ -160,13 +202,13 @@ export default function SurveyForm({ companySlug, onSuccess }: SurveyFormProps) 
           ))}
           <div className="mt-6">
             <QuestionCard
-              id={SURVEY_QUESTIONS.interest.id}
-              question={SURVEY_QUESTIONS.interest.question}
-              type={SURVEY_QUESTIONS.interest.type}
-              options={SURVEY_QUESTIONS.interest.options}
-              value={form[SURVEY_QUESTIONS.interest.id]}
-              onChange={(v) => updateForm(SURVEY_QUESTIONS.interest.id, v)}
-              required={SURVEY_QUESTIONS.interest.required}
+              id={interestQuestion.id}
+              question={interestQuestion.question}
+              type={interestQuestion.type}
+              options={interestQuestion.options}
+              value={form[interestQuestion.id]}
+              onChange={(v) => updateForm(interestQuestion.id, v)}
+              required={interestQuestion.required}
             />
           </div>
         </div>

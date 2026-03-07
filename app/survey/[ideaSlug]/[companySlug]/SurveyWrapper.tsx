@@ -3,12 +3,19 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import SurveyForm from '@/components/SurveyForm';
+import type { IdeaQuestions } from '@/lib/types';
 
 interface SurveyWrapperProps {
+  ideaSlug: string;
   companySlug: string;
+  questions: IdeaQuestions;
 }
 
-export default function SurveyWrapper({ companySlug }: SurveyWrapperProps) {
+export default function SurveyWrapper({
+  ideaSlug,
+  companySlug,
+  questions,
+}: SurveyWrapperProps) {
   const [started, setStarted] = useState(false);
   const router = useRouter();
 
@@ -29,5 +36,12 @@ export default function SurveyWrapper({ companySlug }: SurveyWrapperProps) {
     );
   }
 
-  return <SurveyForm companySlug={companySlug} onSuccess={handleSuccess} />;
+  return (
+    <SurveyForm
+      ideaSlug={ideaSlug}
+      companySlug={companySlug}
+      questions={questions}
+      onSuccess={handleSuccess}
+    />
+  );
 }

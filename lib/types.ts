@@ -1,5 +1,37 @@
+export interface QuestionOption {
+  value: string;
+  label: string;
+}
+
+export interface SurveyQuestion {
+  id: string;
+  question: string;
+  required: boolean;
+  type: 'radio';
+  options: QuestionOption[];
+  showIf?: { [k: string]: string };
+}
+
+export interface IdeaQuestions {
+  part1: SurveyQuestion[];
+  part2: SurveyQuestion[];
+  interest: SurveyQuestion;
+}
+
+export interface Idea {
+  _id?: string;
+  ideaSlug: string;
+  ideaName: string;
+  logo: string;
+  headline: string;
+  description: string;
+  questions: IdeaQuestions;
+  createdAt: Date;
+}
+
 export interface Company {
   _id?: string;
+  ideaSlug: string;
   companyName: string;
   companySlug: string;
   createdAt: Date;
@@ -27,14 +59,17 @@ export interface AnswersPart2 {
 
 export interface SurveyResponse {
   _id?: string;
+  ideaSlug: string;
   companySlug: string;
-  answersPart1: AnswersPart1;
-  answersPart2: AnswersPart2;
-  earlyAccessInterest: 'yes' | 'no';
+  answersPart1?: AnswersPart1;
+  answersPart2?: AnswersPart2;
+  earlyAccessInterest?: 'yes' | 'no';
+  answers?: Record<string, string>;
   createdAt: Date;
 }
 
 export interface SurveyAnalysis {
+  ideaSlug: string;
   companySlug: string;
   totalResponses: number;
   lendingStats: {

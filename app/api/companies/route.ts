@@ -13,9 +13,13 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
   try {
+    const { searchParams } = new URL(request.url);
+    const ideaSlug = searchParams.get('ideaSlug');
+
     const db = await getDb();
     const companies = db.collection('companies');
-    const list = await companies.find({}).sort({ createdAt: -1 }).toArray();
+    const filter = ideaSlug ? { ideaSlug } : {};
+    const list = await companies.find(filter).sort({ createdAt: -1 }).toArray();
     return NextResponse.json(
       list.map((c) => ({
         ...c,
@@ -37,7 +41,14 @@ export async function POST(request: NextRequest) {
   }
   try {
     const body = await request.json();
-    const { companyName, companySlug: slug, notes } = body;
+    const { ideaSlug, companyName, companySlug: slug, notes } = body;
+
+    if (!ideaSlug) {
+      return NextResponse.json(
+        { error: 'ideaSlug is required' },
+        { status: 400 }
+      );
+    }
 
     if (!companyName) {
       return NextResponse.json(
@@ -54,20 +65,30 @@ export async function POST(request: NextRequest) {
         .replace(/[^a-z0-9-]/g, '');
 
     const db = await getDb();
+    const ideas = db.collection('ideas');
     const companies = db.collection('companies');
 
-    const existing = await companies.findOne({ companySlug });
+    const idea = await ideas.findOne({ ideaSlug });
+    if (!idea) {
+      return NextResponse.json(
+        { error: 'Idea not found' },
+        { status: 400 }
+      );
+    }
+
+    const existing = await companies.findOne({ ideaSlug, companySlug });
     if (existing) {
       return NextResponse.json(
-        { error: 'Company slug already exists' },
+        { error: 'Company slug already exists for this idea' },
         { status: 400 }
       );
     }
 
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://surveyyou.vercel.app';
-    const surveyLink = `${baseUrl}/survey/${companySlug}`;
+    const surveyLink = `${baseUrl}/survey/${ideaSlug}/${companySlug}`;
 
     const doc = {
+      ideaSlug,
       companyName,
       companySlug,
       createdAt: new Date(),

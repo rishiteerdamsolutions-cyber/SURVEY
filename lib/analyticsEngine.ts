@@ -2,11 +2,13 @@ import type { SurveyResponse, SurveyAnalysis } from './types';
 
 export function calculateCompanyAnalytics(
   responses: SurveyResponse[],
+  ideaSlug: string,
   companySlug: string
 ): SurveyAnalysis {
   const total = responses.length;
   if (total === 0) {
     return {
+      ideaSlug,
       companySlug,
       totalResponses: 0,
       lendingStats: {
@@ -34,27 +36,27 @@ export function calculateCompanyAnalytics(
     };
   }
 
-  const lenders = responses.filter((r) => r.answersPart1.hasLentMoney === 'yes');
+  const lenders = responses.filter((r) => r.answersPart1?.hasLentMoney === 'yes');
   const lenderCount = lenders.length;
-  const facedDelays = lenders.filter((r) => r.answersPart1.facedRepaymentDelays === 'yes').length;
-  const lostMoney = lenders.filter((r) => r.answersPart1.lostMoney === 'yes').length;
-  const hesitated = lenders.filter((r) => r.answersPart1.hesitatedToAsk === 'yes').length;
+  const facedDelays = lenders.filter((r) => r.answersPart1?.facedRepaymentDelays === 'yes').length;
+  const lostMoney = lenders.filter((r) => r.answersPart1?.lostMoney === 'yes').length;
+  const hesitated = lenders.filter((r) => r.answersPart1?.hesitatedToAsk === 'yes').length;
   const wantPlatform = responses.filter(
-    (r) => r.answersPart1.wantStructuredPlatform === 'yes'
+    (r) => r.answersPart1?.wantStructuredPlatform === 'yes'
   ).length;
 
   const loanSizeCounts: Record<string, number> = {};
   lenders.forEach((r) => {
-    const size = r.answersPart1.averageLoanSize || 'unknown';
+    const size = r.answersPart1?.averageLoanSize || 'unknown';
     loanSizeCounts[size] = (loanSizeCounts[size] || 0) + 1;
   });
 
   const delayedPayers = responses.filter(
-    (r) => r.answersPart2.experiencedDelayedPayments === 'yes'
+    (r) => r.answersPart2?.experiencedDelayedPayments === 'yes'
   );
   const delayTypeDistribution: Record<string, number> = {};
   delayedPayers.forEach((r) => {
-    const type = r.answersPart2.delayedPaymentType || 'other';
+    const type = r.answersPart2?.delayedPaymentType || 'other';
     delayTypeDistribution[type] = (delayTypeDistribution[type] || 0) + 1;
   });
   const mostCommonType =
@@ -62,31 +64,32 @@ export function calculateCompanyAnalytics(
 
   const delayDurationCounts: Record<string, number> = {};
   delayedPayers.forEach((r) => {
-    const dur = r.answersPart2.averageDelayDuration || 'unknown';
+    const dur = r.answersPart2?.averageDelayDuration || 'unknown';
     delayDurationCounts[dur] = (delayDurationCounts[dur] || 0) + 1;
   });
 
   const sent5Reminders = delayedPayers.filter(
-    (r) => r.answersPart2.sentMoreThan5Reminders === 'yes'
+    (r) => r.answersPart2?.sentMoreThan5Reminders === 'yes'
   ).length;
 
   const amountCounts: Record<string, number> = {};
   delayedPayers.forEach((r) => {
-    const amt = r.answersPart2.averageDelayedAmount || 'unknown';
+    const amt = r.answersPart2?.averageDelayedAmount || 'unknown';
     amountCounts[amt] = (amountCounts[amt] || 0) + 1;
   });
 
   const mentalStress = delayedPayers.filter(
-    (r) => r.answersPart2.experiencedMentalStress === 'yes'
+    (r) => r.answersPart2?.experiencedMentalStress === 'yes'
   ).length;
 
   const earlyAccess = responses.filter((r) => r.earlyAccessInterest === 'yes').length;
 
   const platformInterest = responses.filter(
-    (r) => r.answersPart1.wantStructuredPlatform === 'yes'
+    (r) => r.answersPart1?.wantStructuredPlatform === 'yes'
   ).length;
 
   return {
+    ideaSlug,
     companySlug,
     totalResponses: total,
     lendingStats: {
@@ -119,7 +122,7 @@ export function calculateCompanyAnalytics(
 }
 
 export function calculateGlobalAnalytics(
-  allResponses: { companySlug: string; responses: SurveyResponse[] }[]
+  allResponses: { companySlug: string; ideaSlug?: string; responses: SurveyResponse[] }[]
 ) {
   const flat = allResponses.flatMap((c) => c.responses);
   const total = flat.length;
@@ -135,13 +138,13 @@ export function calculateGlobalAnalytics(
     };
   }
 
-  const lenders = flat.filter((r) => r.answersPart1.hasLentMoney === 'yes');
+  const lenders = flat.filter((r) => r.answersPart1?.hasLentMoney === 'yes');
   const delayedPayers = flat.filter(
-    (r) => r.answersPart2.experiencedDelayedPayments === 'yes'
+    (r) => r.answersPart2?.experiencedDelayedPayments === 'yes'
   );
   const interested = flat.filter(
     (r) =>
-      r.answersPart1.wantStructuredPlatform === 'yes' || r.earlyAccessInterest === 'yes'
+      r.answersPart1?.wantStructuredPlatform === 'yes' || r.earlyAccessInterest === 'yes'
   );
 
   return {

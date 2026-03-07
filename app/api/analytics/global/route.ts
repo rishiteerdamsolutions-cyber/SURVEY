@@ -22,15 +22,18 @@ export async function GET(request: NextRequest) {
       .toArray();
 
     const byCompany = responses.reduce<Record<string, SurveyResponse[]>>((acc, r) => {
-      if (!acc[r.companySlug]) acc[r.companySlug] = [];
-      acc[r.companySlug].push(r);
+      const key = r.ideaSlug ? `${r.ideaSlug}:${r.companySlug}` : r.companySlug;
+      if (!acc[key]) acc[key] = [];
+      acc[key].push(r);
       return acc;
     }, {});
 
-    const allResponses = Object.entries(byCompany).map(([companySlug, rs]) => ({
-      companySlug,
-      responses: rs,
-    }));
+    const allResponses = Object.entries(byCompany).map(([key, rs]) => {
+      const first = rs[0];
+      const companySlug = first?.ideaSlug ? key.split(':')[1]! : key;
+      const ideaSlug = first?.ideaSlug;
+      return { companySlug, ideaSlug, responses: rs };
+    });
 
     const analytics = calculateGlobalAnalytics(allResponses);
     return NextResponse.json(analytics);

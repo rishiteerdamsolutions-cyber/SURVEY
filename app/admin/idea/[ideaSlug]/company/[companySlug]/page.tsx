@@ -5,14 +5,17 @@ import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import AnalyticsCharts from '@/components/AnalyticsCharts';
 import ChartSetup from '@/components/ChartSetup';
+import ExportPdfModal from '@/components/ExportPdfModal';
 import type { SurveyAnalysis } from '@/lib/types';
 
 export default function CompanyAnalyticsPage() {
   const params = useParams();
   const router = useRouter();
+  const ideaSlug = params.ideaSlug as string;
   const companySlug = params.companySlug as string;
   const [analytics, setAnalytics] = useState<SurveyAnalysis | null>(null);
   const [loading, setLoading] = useState(true);
+  const [showExportModal, setShowExportModal] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem('admin_token');
@@ -20,7 +23,7 @@ export default function CompanyAnalyticsPage() {
       router.push('/admin');
       return;
     }
-    fetch(`/api/analytics/${companySlug}`, {
+    fetch(`/api/analytics/${companySlug}?ideaSlug=${ideaSlug}`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((r) => (r.ok ? r.json() : null))
@@ -29,7 +32,7 @@ export default function CompanyAnalyticsPage() {
       })
       .catch(console.error)
       .finally(() => setLoading(false));
-  }, [companySlug, router]);
+  }, [companySlug, ideaSlug, router]);
 
   if (loading) {
     return (
@@ -43,8 +46,8 @@ export default function CompanyAnalyticsPage() {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <p className="text-gray-500">Analytics not found</p>
-        <Link href="/admin" className="ml-4 text-blue-600 hover:underline">
-          Back to Admin
+        <Link href={`/admin/idea/${ideaSlug}`} className="ml-4 text-blue-600 hover:underline">
+          Back
         </Link>
       </div>
     );
@@ -58,18 +61,29 @@ export default function CompanyAnalyticsPage() {
       <div className="min-h-screen bg-gray-50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
           <Link
-            href="/admin"
+            href={`/admin/idea/${ideaSlug}`}
             className="inline-flex items-center text-sm text-gray-600 hover:text-gray-900 mb-6"
           >
-            ← Back to Admin
+            ← Back to {ideaSlug}
           </Link>
 
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
-            {companyName} — Analytics
-          </h1>
-          <p className="text-gray-500 mb-8">
-            Total responses: {analytics.totalResponses}
-          </p>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+            <div>
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
+                {companyName} — Analytics
+              </h1>
+              <p className="text-gray-500">
+                Total responses: {analytics.totalResponses}
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setShowExportModal(true)}
+              className="px-4 py-2.5 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 self-start"
+            >
+              Export as PDF
+            </button>
+          </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4 mb-8">
             <div className="bg-white rounded-xl p-4 border border-gray-200">
@@ -116,6 +130,13 @@ export default function CompanyAnalyticsPage() {
           <AnalyticsCharts analytics={analytics} />
         </div>
       </div>
+      {showExportModal && (
+        <ExportPdfModal
+          companyName={companyName}
+          analytics={analytics}
+          onClose={() => setShowExportModal(false)}
+        />
+      )}
     </ChartSetup>
   );
 }

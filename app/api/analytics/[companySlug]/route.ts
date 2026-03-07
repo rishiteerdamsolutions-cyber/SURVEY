@@ -19,13 +19,19 @@ export async function GET(
   }
   try {
     const { companySlug } = await params;
+    const { searchParams } = new URL(request.url);
+    const ideaSlug = searchParams.get('ideaSlug') || 'lendandborrow';
+
     const db = await getDb();
+    const filter = ideaSlug
+      ? { ideaSlug, companySlug }
+      : { companySlug };
     const responses = await db
       .collection<SurveyResponse>('survey_responses')
-      .find({ companySlug })
+      .find(filter)
       .toArray();
 
-    const analytics = calculateCompanyAnalytics(responses, companySlug);
+    const analytics = calculateCompanyAnalytics(responses, ideaSlug, companySlug);
     return NextResponse.json(analytics);
   } catch (error) {
     console.error('Analytics fetch error:', error);

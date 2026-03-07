@@ -7,11 +7,13 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "seed": "tsx scripts/seed-companies.ts"
+    "seed": "tsx scripts/seed-companies.ts",
+    "migrate": "tsx scripts/migrate-to-ideas.ts"
   },
   "dependencies": {
     "chart.js": "^4.5.1",
     "dotenv": "^17.3.1",
+    "jspdf": "^4.2.0",
     "mongodb": "^7.1.0",
     "next": "16.1.6",
     "react": "19.2.3",
