@@ -5,8 +5,8 @@ export default function NotFound() {
     <div className="min-h-screen bg-white flex flex-col items-center justify-center px-4">
       <div className="max-w-md w-full text-center">
         <img
-          src="/logo.png"
-          alt="LendAndBorrow"
+          src="/simple-survey-logo.png"
+          alt="Simple Survey"
           className="h-14 w-auto object-contain mx-auto mb-8"
         />
         <h1 className="text-2xl font-bold text-gray-900 mb-2">Page not found</h1>

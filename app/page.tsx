@@ -5,15 +5,15 @@ export default function Home() {
     <div className="min-h-screen bg-white flex flex-col items-center justify-center px-4">
       <div className="max-w-md w-full text-center">
         <img
-          src="/logo.png"
-          alt="LendAndBorrow"
+          src="/simple-survey-logo.png"
+          alt="Simple Survey"
           className="h-16 sm:h-20 w-auto object-contain mx-auto mb-8"
         />
         <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">
-          LendAndBorrow
+          Simple Survey
         </h1>
         <p className="text-base text-gray-600 mb-8">
-          Problem Validation Survey Platform
+          Create and run surveys
         </p>
         <div className="space-y-3">
           <p className="text-sm text-gray-500">

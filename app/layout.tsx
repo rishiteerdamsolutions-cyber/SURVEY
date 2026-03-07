@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "LendAndBorrow — Survey Platform",
-  description: "Real Life Lending & Payment Experience Survey",
+  title: "Simple Survey — Create and run surveys",
+  description: "Simple Survey - Create and run surveys",
   icons: { icon: "/favicon.png" },
 };
 
