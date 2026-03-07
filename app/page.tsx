@@ -7,7 +7,7 @@ export default function Home() {
         <img
           src="/simple-survey-logo.png"
           alt="Simple Survey"
-          className="h-16 sm:h-20 w-auto object-contain mx-auto mb-8"
+          className="h-80 sm:h-96 w-auto max-w-full object-contain mx-auto mb-8"
         />
         <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">
           Simple Survey

@@ -7,7 +7,7 @@ export default function NotFound() {
         <img
           src="/simple-survey-logo.png"
           alt="Simple Survey"
-          className="h-14 w-auto object-contain mx-auto mb-8"
+          className="h-72 w-auto max-w-full object-contain mx-auto mb-8"
         />
         <h1 className="text-2xl font-bold text-gray-900 mb-2">Page not found</h1>
         <p className="text-gray-600 mb-6">

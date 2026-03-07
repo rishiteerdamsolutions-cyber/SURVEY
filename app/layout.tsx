@@ -15,7 +15,13 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Simple Survey — Create and run surveys",
   description: "Simple Survey - Create and run surveys",
-  icons: { icon: "/favicon.png" },
+  icons: {
+    icon: [
+      { url: "/favicon.png", sizes: "any" },
+      { url: "/favicon.png", sizes: "192x192", type: "image/png" },
+    ],
+    apple: "/favicon.png",
+  },
 };
 
 export default function RootLayout({
