@@ -64,7 +64,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://lendandborrow.in';
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://surveyyou.vercel.app';
     const surveyLink = `${baseUrl}/survey/${companySlug}`;
 
     const doc = {
