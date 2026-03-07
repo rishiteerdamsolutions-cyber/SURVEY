@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "https://simplesurvey.vercel.app";
-const FAVICON_VERSION = "2";
+const FAVICON_VERSION = "3";
 
 export const metadata: Metadata = {
   title: "Simple Survey — Create and run surveys",
@@ -29,12 +29,12 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Simple Survey — Create and run surveys",
     description: "Simple Survey - Create and run surveys",
-    images: [`/favicon.png?v=${FAVICON_VERSION}`],
+    images: [`/logo.png?v=${FAVICON_VERSION}`],
   },
   twitter: {
     card: "summary",
     title: "Simple Survey — Create and run surveys",
-    images: [`/favicon.png?v=${FAVICON_VERSION}`],
+    images: [`/logo.png?v=${FAVICON_VERSION}`],
   },
 };
 

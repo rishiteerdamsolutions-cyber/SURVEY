@@ -84,7 +84,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://surveyyou.vercel.app';
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://simplesurvey.vercel.app';
     const surveyLink = `${baseUrl}/survey/${ideaSlug}/${companySlug}`;
 
     const doc = {

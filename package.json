@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "seed": "tsx scripts/seed-companies.ts",
-    "migrate": "tsx scripts/migrate-to-ideas.ts"
+    "migrate": "tsx scripts/migrate-to-ideas.ts",
+    "fix-links": "tsx scripts/fix-survey-links.ts"
   },
   "dependencies": {
     "chart.js": "^4.5.1",

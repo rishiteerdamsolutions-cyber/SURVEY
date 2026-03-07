@@ -18,7 +18,7 @@ async function migrate() {
     console.error('Set MONGODB_URI in .env.local');
     process.exit(1);
   }
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://surveyyou.vercel.app';
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://simplesurvey.vercel.app';
 
   const client = new MongoClient(uri);
   await client.connect();

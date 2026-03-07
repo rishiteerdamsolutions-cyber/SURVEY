@@ -5,7 +5,7 @@ export default function NotFound() {
     <div className="min-h-screen bg-white flex flex-col items-center justify-center px-4">
       <div className="max-w-md w-full text-center">
         <img
-          src="/simple-survey-logo.png"
+          src="/logo.png"
           alt="Simple Survey"
           className="h-72 w-auto max-w-full object-contain mx-auto mb-8"
         />
