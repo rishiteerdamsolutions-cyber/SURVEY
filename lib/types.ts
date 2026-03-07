@@ -15,6 +15,7 @@ export interface SurveyQuestion {
 export interface IdeaQuestions {
   part1: SurveyQuestion[];
   part2: SurveyQuestion[];
+  part3?: SurveyQuestion[];
   interest: SurveyQuestion;
 }
 
@@ -63,6 +64,7 @@ export interface SurveyResponse {
   companySlug: string;
   answersPart1?: AnswersPart1;
   answersPart2?: AnswersPart2;
+  answersPart3?: Record<string, string>;
   earlyAccessInterest?: 'yes' | 'no';
   answers?: Record<string, string>;
   createdAt: Date;

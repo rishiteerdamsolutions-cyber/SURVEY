@@ -10,16 +10,7 @@ import { readFileSync } from 'fs';
 import path from 'path';
 import questionTemplate from '../lib/questionTemplate.json';
 
-const LENDANDBORROW_DESCRIPTION = `This anonymous survey aims to understand real-life experiences with informal lending and delayed payments.
-
-How LendAndBorrow works:
-• Lender sets a due date when lending money
-• Grace period after the due date
-• After grace period: inquiry sent to CIBIL
-• Borrower's CIBIL is affected (like evading a loan or EMI)
-• Lender cannot stop this process even if they want to
-• This disciplines borrowers to repay on time
-• If they don't pay, they must pay to get future loans from banks or apps`;
+const LENDANDBORROW_DESCRIPTION = `This anonymous survey aims to understand real-life experiences with informal lending and delayed payments.`;
 
 async function migrate() {
   const uri = process.env.MONGODB_URI;
@@ -59,7 +50,16 @@ async function migrate() {
     });
     console.log('Created lendandborrow idea');
   } else {
-    console.log('lendandborrow idea already exists');
+    await ideas.updateOne(
+      { ideaSlug: 'lendandborrow' },
+      {
+        $set: {
+          description: LENDANDBORROW_DESCRIPTION,
+          questions: questionTemplate,
+        },
+      }
+    );
+    console.log('Updated lendandborrow idea (short description, part3 questions)');
   }
 
   const companiesToUpdate = await companies.find({ ideaSlug: { $exists: false } }).toArray();

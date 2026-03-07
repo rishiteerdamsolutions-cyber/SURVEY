@@ -144,6 +144,71 @@
       "showIf": { "experiencedDelayedPayments": "yes" }
     }
   ],
+  "part3": [
+    {
+      "id": "wouldUseDueDate",
+      "question": "Would you use a lending platform where you (as lender) can set a due date when lending money?",
+      "required": true,
+      "type": "radio",
+      "options": [
+        { "value": "yes", "label": "Yes" },
+        { "value": "no", "label": "No" }
+      ]
+    },
+    {
+      "id": "gracePeriodImportant",
+      "question": "Would a grace period (extra time after the due date) before any action be important to you?",
+      "required": true,
+      "type": "radio",
+      "options": [
+        { "value": "yes", "label": "Yes" },
+        { "value": "no", "label": "No" }
+      ]
+    },
+    {
+      "id": "cibilForNonRepayment",
+      "question": "If a borrower doesn't repay after the grace period, should their CIBIL be affected (like evading a loan) to encourage repayment?",
+      "required": true,
+      "type": "radio",
+      "options": [
+        { "value": "yes", "label": "Yes" },
+        { "value": "no", "label": "No" },
+        { "value": "notSure", "label": "Not sure" }
+      ]
+    },
+    {
+      "id": "lenderCannotStopCibil",
+      "question": "Would you be okay with a process where the lender cannot stop the CIBIL inquiry once it starts? (This ensures borrowers take repayment seriously)",
+      "required": true,
+      "type": "radio",
+      "options": [
+        { "value": "yes", "label": "Yes" },
+        { "value": "no", "label": "No" },
+        { "value": "notSure", "label": "Not sure" }
+      ]
+    },
+    {
+      "id": "cibilMotivatesRepayment",
+      "question": "Would knowing that non-repayment affects your CIBIL make you more likely to repay on time as a borrower?",
+      "required": true,
+      "type": "radio",
+      "options": [
+        { "value": "yes", "label": "Yes" },
+        { "value": "no", "label": "No" }
+      ]
+    },
+    {
+      "id": "cibilDisqualifyUntilCleared",
+      "question": "Is it a good idea to report non-payment to CIBIL so the borrower gets disqualified for loans from banks or apps until your loan is cleared?",
+      "required": true,
+      "type": "radio",
+      "options": [
+        { "value": "yes", "label": "Yes, good idea" },
+        { "value": "no", "label": "No" },
+        { "value": "notSure", "label": "Not sure" }
+      ]
+    }
+  ],
   "interest": {
     "id": "earlyAccessInterest",
     "question": "Would you like early access to a structured lending & payment platform?",

@@ -5,7 +5,7 @@ import type { SurveyResponse, AnswersPart1, AnswersPart2 } from '@/lib/types';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { ideaSlug, companySlug, answersPart1, answersPart2, earlyAccessInterest, answers } = body;
+    const { ideaSlug, companySlug, answersPart1, answersPart2, answersPart3, earlyAccessInterest, answers } = body;
 
     if (!companySlug) {
       return NextResponse.json(
@@ -36,6 +36,7 @@ export async function POST(request: NextRequest) {
     if (answersPart1 && answersPart2) {
       response.answersPart1 = answersPart1 as AnswersPart1;
       response.answersPart2 = answersPart2 as AnswersPart2;
+      if (answersPart3) response.answersPart3 = answersPart3 as Record<string, string>;
       response.earlyAccessInterest = earlyAccessInterest || 'no';
     } else if (answers) {
       response.answers = answers as Record<string, string>;

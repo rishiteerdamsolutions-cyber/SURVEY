@@ -34,7 +34,7 @@ export default function SurveyForm({
   questions,
   onSuccess,
 }: SurveyFormProps) {
-  const [part, setPart] = useState<1 | 2>(1);
+  const [part, setPart] = useState<1 | 2 | 3>(1);
   const [form, setForm] = useState<FormState>({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -49,14 +49,17 @@ export default function SurveyForm({
   const part2Questions = questions.part2.filter((q) =>
     shouldShow(q, form)
   );
+  const part3Questions = questions.part3 || [];
   const interestQuestion = questions.interest as SurveyQuestion;
 
   const part1Required = part1Questions.filter((q) => q.required);
   const part2Required = part2Questions.filter((q) => q.required);
+  const part3Required = part3Questions.filter((q) => q.required);
 
   const part1Valid = part1Required.every((q) => form[q.id]);
-  const part2Valid =
-    part2Required.every((q) => form[q.id]) && form[interestQuestion.id];
+  const part2Valid = part2Required.every((q) => form[q.id]);
+  const part3Valid =
+    part3Required.every((q) => form[q.id]) && form[interestQuestion.id];
 
   const isLendAndBorrow = ideaSlug === 'lendandborrow';
 
@@ -70,10 +73,26 @@ export default function SurveyForm({
       setPart(2);
       return;
     }
-
-    if (!part2Valid) {
-      setError('Please answer all required questions.');
-      return;
+    if (part === 2) {
+      if (!part2Valid) {
+        setError('Please answer all required questions.');
+        return;
+      }
+      if (part3Questions.length > 0) {
+        setPart(3);
+        return;
+      }
+    }
+    if (part === 3 && part3Questions.length > 0) {
+      if (!part3Valid) {
+        setError('Please answer all required questions.');
+        return;
+      }
+    } else if (part === 2 && part3Questions.length === 0) {
+      if (!part3Valid) {
+        setError('Please answer all required questions.');
+        return;
+      }
     }
 
     setLoading(true);
@@ -81,9 +100,15 @@ export default function SurveyForm({
       let body: Record<string, unknown>;
 
       if (isLendAndBorrow) {
+        const part3Answers = part3Questions.length > 0
+          ? Object.fromEntries(
+              part3Questions.map((q) => [q.id, form[q.id] ?? ''])
+            )
+          : {};
         body = {
           ideaSlug,
           companySlug,
+          answersPart3: part3Answers,
           answersPart1: {
             hasLentMoney: (form.hasLentMoney as 'yes' | 'no') || 'no',
             facedRepaymentDelays: form.facedRepaymentDelays as
@@ -149,7 +174,11 @@ export default function SurveyForm({
     }
   };
 
-  const progressPercent = part === 1 ? 50 : 100;
+  const totalParts = part3Questions.length > 0 ? 3 : 2;
+  const progressPercent =
+    totalParts === 3
+      ? (part === 1 ? 33 : part === 2 ? 66 : 100)
+      : part === 1 ? 50 : 100;
 
   return (
     <div className="space-y-6">
@@ -160,13 +189,13 @@ export default function SurveyForm({
         />
       </div>
       <p className="text-xs sm:text-sm text-gray-500">
-        {part === 1 ? 'PART 1' : 'PART 2'}
+        {part === 1 ? 'PART 1' : part === 2 ? 'PART 2' : 'PART 3'}
       </p>
 
       {part === 1 && (
         <div className="space-y-4">
           <h2 className="text-lg sm:text-xl font-semibold text-gray-800">
-            Part 1
+            Part 1 — Lending Experiences
           </h2>
           {part1Questions.map((q) => (
             <QuestionCard
@@ -186,9 +215,42 @@ export default function SurveyForm({
       {part === 2 && (
         <div className="space-y-4">
           <h2 className="text-lg sm:text-xl font-semibold text-gray-800">
-            Part 2
+            Part 2 — Delayed Payment Experiences
           </h2>
           {part2Questions.map((q) => (
+            <QuestionCard
+              key={q.id}
+              id={q.id}
+              question={q.question}
+              type={q.type}
+              options={q.options}
+              value={form[q.id]}
+              onChange={(v) => updateForm(q.id, v)}
+              required={q.required}
+            />
+          ))}
+          {part3Questions.length === 0 && (
+            <div className="mt-6">
+              <QuestionCard
+                id={interestQuestion.id}
+                question={interestQuestion.question}
+                type={interestQuestion.type}
+                options={interestQuestion.options}
+                value={form[interestQuestion.id]}
+                onChange={(v) => updateForm(interestQuestion.id, v)}
+                required={interestQuestion.required}
+              />
+            </div>
+          )}
+        </div>
+      )}
+
+      {part === 3 && part3Questions.length > 0 && (
+        <div className="space-y-4">
+          <h2 className="text-lg sm:text-xl font-semibold text-gray-800">
+            Part 3 — Your views on a structured lending platform
+          </h2>
+          {part3Questions.map((q) => (
             <QuestionCard
               key={q.id}
               id={q.id}
@@ -219,10 +281,10 @@ export default function SurveyForm({
       )}
 
       <div className="flex gap-3 pt-2">
-        {part === 2 && (
+        {(part === 2 || part === 3) && (
           <button
             type="button"
-            onClick={() => setPart(1)}
+            onClick={() => setPart((p) => (p === 3 ? 2 : 1) as 1 | 2 | 3)}
             className="flex-1 sm:flex-none px-6 py-3 sm:py-3.5 text-base font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors min-h-[44px] touch-manipulation"
           >
             Back
@@ -234,7 +296,7 @@ export default function SurveyForm({
           disabled={loading}
           className="flex-1 sm:flex-none px-6 py-3 sm:py-3.5 text-base font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-60 disabled:cursor-not-allowed transition-colors min-h-[44px] touch-manipulation"
         >
-          {loading ? 'Submitting...' : part === 1 ? 'Next' : 'Submit'}
+          {loading ? 'Submitting...' : part < (part3Questions.length > 0 ? 3 : 2) ? 'Next' : 'Submit'}
         </button>
       </div>
     </div>

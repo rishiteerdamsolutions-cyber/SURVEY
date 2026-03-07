@@ -13,6 +13,7 @@ function validateQuestions(q: unknown): q is IdeaQuestions {
   if (!q || typeof q !== 'object') return false;
   const obj = q as Record<string, unknown>;
   if (!Array.isArray(obj.part1) || !Array.isArray(obj.part2)) return false;
+  if (obj.part3 !== undefined && !Array.isArray(obj.part3)) return false;
   if (!obj.interest || typeof obj.interest !== 'object') return false;
   const interest = obj.interest as Record<string, unknown>;
   return (
