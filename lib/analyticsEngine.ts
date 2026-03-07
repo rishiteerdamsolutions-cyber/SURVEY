@@ -32,6 +32,12 @@ export function calculateCompanyAnalytics(
         platformInterestPercent: 0,
         earlyAccessPercent: 0,
       },
+      overallTrend: {
+        forPercent: 0,
+        againstPercent: 0,
+        forCount: 0,
+        againstCount: 0,
+      },
       updatedAt: new Date(),
     };
   }
@@ -88,6 +94,13 @@ export function calculateCompanyAnalytics(
     (r) => r.answersPart1?.wantStructuredPlatform === 'yes'
   ).length;
 
+  const forCount = responses.filter(
+    (r) => r.earlyAccessInterest === 'yes' || r.answers?.earlyAccessInterest === 'yes'
+  ).length;
+  const againstCount = responses.filter(
+    (r) => r.earlyAccessInterest === 'no' || r.answers?.earlyAccessInterest === 'no'
+  ).length;
+
   return {
     ideaSlug,
     companySlug,
@@ -116,6 +129,12 @@ export function calculateCompanyAnalytics(
     interestStats: {
       platformInterestPercent: Math.round((platformInterest / total) * 100),
       earlyAccessPercent: Math.round((earlyAccess / total) * 100),
+    },
+    overallTrend: {
+      forPercent: total > 0 ? Math.round((forCount / total) * 100) : 0,
+      againstPercent: total > 0 ? Math.round((againstCount / total) * 100) : 0,
+      forCount,
+      againstCount,
     },
     updatedAt: new Date(),
   };

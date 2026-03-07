@@ -7,12 +7,14 @@ import type { SurveyAnalysis } from '@/lib/types';
 interface ExportPdfModalProps {
   companyName: string;
   analytics: SurveyAnalysis;
+  exportAreaId: string;
   onClose: () => void;
 }
 
 export default function ExportPdfModal({
   companyName,
   analytics,
+  exportAreaId,
   onClose,
 }: ExportPdfModalProps) {
   const [password, setPassword] = useState('');
@@ -48,55 +50,47 @@ export default function ExportPdfModal({
       return;
     }
 
-    const doc = new jsPDF();
-    const { lendingStats, paymentStats, interestStats } = analytics;
+    try {
+      const element = document.getElementById(exportAreaId);
+      if (!element) {
+        setError('Export area not found. Please try again.');
+        setLoading(false);
+        return;
+      }
 
-    doc.setFontSize(18);
-    doc.text('LendAndBorrow — Survey Analytics Report', 20, 20);
-    doc.setFontSize(14);
-    doc.text(companyName, 20, 30);
-    doc.setFontSize(10);
-    doc.text(`Generated: ${new Date().toLocaleString()}`, 20, 38);
-    doc.text(`Total Responses: ${analytics.totalResponses}`, 20, 46);
+      const html2canvas = (await import('html2canvas')).default;
+      const canvas = await html2canvas(element, {
+        scale: 2,
+        useCORS: true,
+        logging: false,
+      });
 
-    let y = 60;
-    doc.setFontSize(12);
-    doc.text('Part 1 — Lending Analytics', 20, y);
-    y += 8;
-    doc.setFontSize(10);
-    doc.text(`• Lent money: ${lendingStats.lentMoneyPercent}%`, 25, y);
-    y += 6;
-    doc.text(`• Faced repayment delays: ${lendingStats.facedDelaysPercent}%`, 25, y);
-    y += 6;
-    doc.text(`• Lost money: ${lendingStats.lostMoneyPercent}%`, 25, y);
-    y += 6;
-    doc.text(`• Hesitated to ask for repayment: ${lendingStats.hesitatedPercent}%`, 25, y);
-    y += 6;
-    doc.text(`• Want structured platform: ${lendingStats.wantPlatformPercent}%`, 25, y);
+      const imgData = canvas.toDataURL('image/png');
+      const doc = new jsPDF('p', 'mm', 'a4', true);
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const pageHeight = doc.internal.pageSize.getHeight();
+      const margin = 10;
+      const contentWidth = pageWidth - 2 * margin;
+      const contentHeight = pageHeight - 2 * margin;
+      let imgWidth = contentWidth;
+      let imgHeight = (canvas.height * imgWidth) / canvas.width;
 
-    y += 12;
-    doc.setFontSize(12);
-    doc.text('Part 2 — Delayed Payment Analytics', 20, y);
-    y += 8;
-    doc.setFontSize(10);
-    doc.text(`• Experienced delayed payments: ${paymentStats.experiencedDelaysPercent}%`, 25, y);
-    y += 6;
-    doc.text(`• Most common type: ${paymentStats.mostCommonType}`, 25, y);
-    y += 6;
-    doc.text(`• Sent 5+ reminders: ${paymentStats.sent5PlusRemindersPercent}%`, 25, y);
-    y += 6;
-    doc.text(`• Mental stress: ${paymentStats.mentalStressPercent}%`, 25, y);
+      if (imgHeight > contentHeight) {
+        const scale = contentHeight / imgHeight;
+        imgWidth *= scale;
+        imgHeight *= scale;
+      }
 
-    y += 12;
-    doc.setFontSize(12);
-    doc.text('Interest Metrics', 20, y);
-    y += 8;
-    doc.setFontSize(10);
-    doc.text(`• Platform interest: ${interestStats.platformInterestPercent}%`, 25, y);
-    y += 6;
-    doc.text(`• Early access interest: ${interestStats.earlyAccessPercent}%`, 25, y);
+      doc.addImage(imgData, 'PNG', margin, margin, imgWidth, imgHeight);
 
-    doc.save(`LendAndBorrow-${companyName.replace(/\s+/g, '-')}-Analytics.pdf`);
+      doc.save(`${companyName.replace(/\s+/g, '-')}-Analytics.pdf`);
+    } catch (err) {
+      console.error('PDF export error:', err);
+      setError('Failed to export PDF. Please try again.');
+      setLoading(false);
+      return;
+    }
+
     setLoading(false);
     onClose();
   };
@@ -108,9 +102,9 @@ export default function ExportPdfModal({
           Export Analytics as PDF
         </h3>
         <p className="text-gray-600 mb-4">
-          Are you sure you want to export the analytics report for{' '}
-          <strong>{companyName}</strong>? The PDF will contain all metrics from
-          Part 1 (Lending) and Part 2 (Delayed Payments).
+          Export the analytics report for <strong>{companyName}</strong> as a PDF.
+          The PDF will capture the page as it appears, including all stats and
+          charts.
         </p>
         <form onSubmit={handleExport} className="space-y-4">
           <div className="flex items-center gap-3">

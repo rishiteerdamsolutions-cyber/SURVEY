@@ -95,5 +95,11 @@ export interface SurveyAnalysis {
     platformInterestPercent: number;
     earlyAccessPercent: number;
   };
+  overallTrend?: {
+    forPercent: number;
+    againstPercent: number;
+    forCount: number;
+    againstCount: number;
+  };
   updatedAt: Date;
 }

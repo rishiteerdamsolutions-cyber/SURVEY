@@ -1,0 +1,142 @@
+{
+  "part1": [
+    {
+      "id": "heard-of-financial-literacy-in-school",
+      "question": "Have you ever heard about financial literacy or money education in school?",
+      "required": true,
+      "type": "radio",
+      "options": [
+        { "value": "yes", "label": "Yes" },
+        { "value": "no", "label": "No" }
+      ]
+    },
+    {
+      "id": "learned-money-management",
+      "question": "Have you learned how to manage money (saving, investing, budgeting) anywhere?",
+      "required": true,
+      "type": "radio",
+      "options": [
+        { "value": "school", "label": "In school" },
+        { "value": "parents", "label": "From parents/family" },
+        { "value": "internet", "label": "From internet/social media" },
+        { "value": "never", "label": "Never learned" }
+      ]
+    },
+    {
+      "id": "importance-of-money-education",
+      "question": "Do you think students should learn about money and financial independence early in life?",
+      "required": true,
+      "type": "radio",
+      "options": [
+        { "value": "yes", "label": "Yes" },
+        { "value": "maybe", "label": "Maybe" },
+        { "value": "no", "label": "No" }
+      ]
+    },
+    {
+      "id": "age-to-start-financial-learning",
+      "question": "At what age do you think students should start learning about money and financial skills?",
+      "required": true,
+      "type": "radio",
+      "options": [
+        { "value": "below-10", "label": "Below 10 years" },
+        { "value": "10-13", "label": "10–13 years" },
+        { "value": "14-18", "label": "14–18 years" },
+        { "value": "college", "label": "Only in college" }
+      ]
+    }
+  ],
+  "part2": [
+    {
+      "id": "interest-in-student-financial-program",
+      "question": "Would you be interested in a program that teaches students how money, business, saving, and investing work?",
+      "required": true,
+      "type": "radio",
+      "options": [
+        { "value": "very-interested", "label": "Very interested" },
+        { "value": "somewhat-interested", "label": "Somewhat interested" },
+        { "value": "not-interested", "label": "Not interested" }
+      ]
+    },
+    {
+      "id": "prefer-learning-method",
+      "question": "How should students ideally learn financial skills?",
+      "required": true,
+      "type": "radio",
+      "options": [
+        { "value": "games", "label": "Through games and simulations" },
+        { "value": "workshops", "label": "Workshops and activities" },
+        { "value": "classes", "label": "Regular school classes" },
+        { "value": "online", "label": "Online learning" }
+      ]
+    },
+    {
+      "id": "interest-in-sfo-activities",
+      "question": "Would students participate in competitions, quizzes, and simulations about finance and entrepreneurship?",
+      "required": true,
+      "type": "radio",
+      "options": [
+        { "value": "yes", "label": "Yes" },
+        { "value": "maybe", "label": "Maybe" },
+        { "value": "no", "label": "No" }
+      ]
+    },
+    {
+      "id": "school-support-for-financial-programs",
+      "question": "Do you think schools would support programs that teach students about money and entrepreneurship?",
+      "required": true,
+      "type": "radio",
+      "options": [
+        { "value": "yes", "label": "Yes" },
+        { "value": "maybe", "label": "Maybe" },
+        { "value": "no", "label": "No" }
+      ]
+    }
+  ],
+  "part3": [
+    {
+      "id": "value-of-sfo-program",
+      "question": "If a program like SFO (Student Financial Olympiad) existed for students, would it be valuable?",
+      "required": true,
+      "type": "radio",
+      "options": [
+        { "value": "very-valuable", "label": "Very valuable" },
+        { "value": "somewhat-valuable", "label": "Somewhat valuable" },
+        { "value": "not-valuable", "label": "Not valuable" },
+        { "value": "not-sure", "label": "Not sure" }
+      ]
+    },
+    {
+      "id": "school-willingness-to-participate",
+      "question": "Would your school consider participating in a national-level financial literacy olympiad for students?",
+      "required": true,
+      "type": "radio",
+      "options": [
+        { "value": "yes", "label": "Yes" },
+        { "value": "maybe", "label": "Maybe" },
+        { "value": "no", "label": "No" }
+      ]
+    },
+    {
+      "id": "importance-of-financial-freedom",
+      "question": "Do you think teaching financial independence and entrepreneurship can help students achieve financial freedom earlier in life?",
+      "required": true,
+      "type": "radio",
+      "options": [
+        { "value": "yes", "label": "Yes" },
+        { "value": "maybe", "label": "Maybe" },
+        { "value": "no", "label": "No" }
+      ]
+    }
+  ],
+  "interest": {
+    "id": "earlyAccessInterest",
+    "question": "Would you like early access or updates about the SFO (Student Financial Olympiad) program?",
+    "required": true,
+    "type": "radio",
+    "options": [
+      { "value": "yes", "label": "Yes" },
+      { "value": "no", "label": "No" }
+    ]
+  }
+}

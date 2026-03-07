@@ -85,15 +85,13 @@ Open [http://localhost:3000](http://localhost:3000).
 4. **Survey links** — Each company gets `/survey/[ideaSlug]/[companySlug]`
 5. **Analytics** — Per-company and global analytics
 
-## Question JSON Template
+## Question JSON
 
-Download the template from the admin dashboard or `/api/questions/template`. Structure:
+When creating an idea, upload a JSON file with this structure:
 
 - `part1` — Array of questions (id, question, type, options, required, optional showIf)
 - `part2` — Array of questions
 - `interest` — Object with id, question, type, options, required
-
-Edit locally and upload when creating an idea.
 
 ## Scalability
 

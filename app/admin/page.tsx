@@ -221,13 +221,6 @@ export default function AdminPage() {
               Super Admin Dashboard
             </h1>
             <div className="flex gap-2">
-              <a
-                href="/api/questions/template"
-                download
-                className="px-4 py-2.5 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50"
-              >
-                Download Question Template
-              </a>
               <button
                 type="button"
                 onClick={() => setShowCreate(!showCreate)}
@@ -357,7 +350,7 @@ export default function AdminPage() {
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg"
                   />
                   <p className="mt-1 text-xs text-gray-500">
-                    Download the template, edit locally, then upload.
+                    Upload a JSON file with part1, part2, interest structure.
                   </p>
                 </div>
                 {error && <p className="text-sm text-red-600">{error}</p>}

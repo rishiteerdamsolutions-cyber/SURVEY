@@ -85,6 +85,46 @@ export default function CompanyAnalyticsPage() {
             </button>
           </div>
 
+          <div id="analytics-export-area">
+            <div className="mb-6">
+              <h2 className="text-xl font-semibold text-gray-900">{companyName} — Analytics</h2>
+              <p className="text-gray-500">Total responses: {analytics.totalResponses}</p>
+            </div>
+            {analytics.overallTrend && analytics.totalResponses > 0 && (
+              <div className="mb-8 p-4 sm:p-6 bg-white rounded-xl border border-gray-200">
+                <h3 className="text-sm font-medium text-gray-600 mb-4">Overall Trend</h3>
+                <div className="flex flex-wrap items-center gap-4 sm:gap-6">
+                  <div className="flex items-center gap-2">
+                    <span className="text-2xl sm:text-3xl font-bold text-emerald-600">
+                      {analytics.overallTrend.forPercent}%
+                    </span>
+                    <span className="text-gray-600">For the idea</span>
+                    <span className="text-sm text-gray-500">
+                      ({analytics.overallTrend.forCount} participants)
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-2xl sm:text-3xl font-bold text-red-600">
+                      {analytics.overallTrend.againstPercent}%
+                    </span>
+                    <span className="text-gray-600">Against the idea</span>
+                    <span className="text-sm text-gray-500">
+                      ({analytics.overallTrend.againstCount} participants)
+                    </span>
+                  </div>
+                </div>
+                <div className="mt-3 h-3 bg-gray-200 rounded-full overflow-hidden flex">
+                  <div
+                    className="bg-emerald-500 h-full transition-all"
+                    style={{ width: `${analytics.overallTrend.forPercent}%` }}
+                  />
+                  <div
+                    className="bg-red-500 h-full transition-all"
+                    style={{ width: `${analytics.overallTrend.againstPercent}%` }}
+                  />
+                </div>
+              </div>
+            )}
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4 mb-8">
             <div className="bg-white rounded-xl p-4 border border-gray-200">
               <p className="text-xs text-gray-500">Lent Money</p>
@@ -128,12 +168,14 @@ export default function CompanyAnalyticsPage() {
             Charts
           </h2>
           <AnalyticsCharts analytics={analytics} />
+          </div>
         </div>
       </div>
       {showExportModal && (
         <ExportPdfModal
           companyName={companyName}
           analytics={analytics}
+          exportAreaId="analytics-export-area"
           onClose={() => setShowExportModal(false)}
         />
       )}
