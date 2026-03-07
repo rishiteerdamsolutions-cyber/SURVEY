@@ -2,13 +2,16 @@ import { notFound } from 'next/navigation';
 import SurveyWrapper from './SurveyWrapper';
 import { getDb } from '@/lib/mongodb';
 
+export const dynamic = 'force-dynamic';
+
 async function getCompany(slug: string) {
   try {
     const db = await getDb();
     const companies = db.collection('companies');
     const company = await companies.findOne({ companySlug: slug });
     return company ? { companySlug: slug } : null;
-  } catch {
+  } catch (err) {
+    console.error('Survey page DB error:', err);
     return null;
   }
 }
